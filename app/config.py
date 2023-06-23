@@ -9,12 +9,18 @@ class DB(BaseSettings):
     password: str
 
 
+class Api(BaseSettings):
+    api_secret: str
+
+
 class SettingsExtractor(BaseSettings):
     DB__HOST: str
     DB__PORT: int
     DB__NAME: str
     DB__USER: str
     DB__PASSWORD: str
+
+    API__SECRET: str
 
     class Config:
         env_file = ".env"
@@ -23,6 +29,7 @@ class SettingsExtractor(BaseSettings):
 
 class Settings(BaseSettings):
     db: DB
+    api: Api
 
 
 def load_config() -> Settings:
@@ -35,5 +42,8 @@ def load_config() -> Settings:
             name=settings.DB__NAME,
             user=settings.DB__USER,
             password=settings.DB__PASSWORD,
+        ),
+        api=Api(
+            api_secret=settings.API__SECRET
         )
     )
