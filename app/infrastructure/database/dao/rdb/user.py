@@ -7,7 +7,7 @@ from app.infrastructure.database.models.user import User
 
 
 class UserDAO(BaseDAO[User]):
-    def __int__(self, session: AsyncSession):
+    def __init__(self, session: AsyncSession):
         super().__init__(User, session)
 
     async def add_user(self, name: str, email: str, password: str) -> dto.User:

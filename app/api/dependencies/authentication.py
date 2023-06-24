@@ -29,11 +29,7 @@ class AuthProvider:
         self.algorythm = "HS256"
         self.access_token_expire = timedelta(days=3)
 
-    def verify_password(
-        self,
-        plain_password: str,
-        hashed_password: str
-    ) -> bool:
+    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         return self.pwd_context.verify(
             plain_password,
             hashed_password
@@ -77,7 +73,7 @@ class AuthProvider:
         user = await dao.user.get_user_with_password(email=email)
         if user is None:
             raise http_status_401
-        if self.verify_password(password, user.password):
+        if not self.verify_password(password, user.password):
             raise http_status_401
         return user
 
