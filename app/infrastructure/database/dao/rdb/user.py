@@ -1,4 +1,4 @@
-from sqlalchemy import insert
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app import dto
 
@@ -18,6 +18,17 @@ class UserDAO(BaseDAO[User]):
                 password=password
             ).returning(User)
         )
+        await self.session.commit()
         return dto.User.from_orm(result.scalar())
-    
-    
+
+    async def get_user_with_password(self, email: str) -> dto.UserWithPassword:
+        result = await self.session.execute(select(User).filter(User.email == email))
+        user = result.scalar()
+        if user is not None:
+            return dto.UserWithPassword.from_orm(user)
+
+    async def get_user(self, email: str) -> dto.User:
+        result = await self.session.execute(select(User).filter(User.email == email))
+        user = result.scalar()
+        if user is not None:
+            return dto.User.from_orm(user)
