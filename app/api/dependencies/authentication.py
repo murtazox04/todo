@@ -14,7 +14,7 @@ from .database import dao_provider
 from app.infrastructure.database.dao.holder import HolderDao
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/login")
 
 
 def get_user(token: str = Depends(oauth2_scheme)) -> dto.User:
@@ -92,7 +92,7 @@ class AuthProvider:
                 self.secret_key,
                 algorithms=self.algorythm
             )
-            email: str = payload.get("email")
+            email: str = payload.get("sub")
             if email is None:
                 raise credentials_exeption
         except JWTError:

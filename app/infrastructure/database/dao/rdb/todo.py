@@ -1,5 +1,5 @@
 from pydantic import parse_obj_as
-from sqlalchemy import insert, select, update
+from sqlalchemy import insert, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from app import dto
 
@@ -64,6 +64,13 @@ class TodoDAO(BaseDAO[Todo]):
                 description=description,
                 status=status
             ).filter(Todo.id == todo_id).returning(Todo)
+        )
+        await self.session.commit()
+        return dto.Todo.from_orm(result.scalar())
+
+    async def delete_todo(self, todo_id: int) -> dto.Todo:
+        result = await self.session.execute(
+            delete(Todo).filter(Todo.id == todo_id).returning(Todo)
         )
         await self.session.commit()
         return dto.Todo.from_orm(result.scalar())

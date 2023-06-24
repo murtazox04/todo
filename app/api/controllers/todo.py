@@ -57,12 +57,26 @@ async def edit_todo(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Todo not found"
         )
-    return await dao.todo.get_todo
+    return await dao.todo.edit_todo(
+        todo_id=todo.todo_id,
+        name=todo.name,
+        description=todo.description,
+        status=todo.status
+    )
 
 
 @router.delete(
     path="/delete",
     description="Delete existing TODO"
 )
-async def delete_todo() -> dto.Todo:
-    ...
+async def delete_todo(
+    todo: schems.DeleteTodo,
+    user: dto.User = Depends(get_user),
+    dao: HolderDao = Depends(dao_provider)
+) -> dto.Todo:
+    if await dao.todo.get_todo(user_id=user.id, todo_id=todo.todo_id) is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Todo not found"
+        )
+    return await dao.todo.delete_todo(todo_id=todo.todo_id)
