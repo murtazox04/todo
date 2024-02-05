@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 uvicorn = "^0.21.1"
-fastapi = "^0.95.0"
+fastapi = "^0.109.1"
 sqlalchemy = "^2.0.7"
 asyncpg = "^0.27.0"
 pydantic = {extras = ["dotenv"], version = "^1.10.7"}
